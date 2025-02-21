@@ -1,0 +1,26 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: whyjq
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: arrival
+service: chatgpt-api
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: us-east-1
+  environment:
+    OPENAI_API_KEY: sk-proj-YXU59aQluxW5Bu2bcPtNT3BlbkFJ5voVzk9O3ZZfY7lFFTzS
+    THE_PREFIX: "Now perfrom as an alien. You are going to receive a message, and I need you to reply to the message in one single sentence, acting like you are first to the Earth. Here is the MESSAGE:"
+    THE_SUFFIX: "The MESSAGE is shown as before. Your answer should be super short and mysterous. You must not disclose that you are anyhow related to any entity in human society. You must not say anything related to duties of chatbots. You must not cite the massage directly."
+  iam:
+    role:
+      arn:aws:iam::339712860018:role/service-role/ChatGPTProxy-role-4s3qtkll
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http:
+          path: /chatgpt
+          method: post
+          cors: true

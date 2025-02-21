@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whyjq.com - Viewing PDF</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #pdf-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        #navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="pdf-modal" onclick="closePDFModal(event)">
+        <canvas id="pdf-canvas"></canvas>
+        <div id="page-indicator"></div>
+    </div>
+    <canvas id="pdf-canvas"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script>
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) === variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            console.log('Query variable %s not found', variable);
+        }
+
+        function loadPDF(pdfPath, pageNum) {
+            var loadingTask = pdfjsLib.getDocument(pdfPath);
+            loadingTask.promise.then(function(pdf) {
+                pdf.getPage(pageNum).then(function(page) {
+                    var scale = 1.5;
+                    var viewport = page.getViewport({scale: scale});
+                    var canvas = document.getElementById('pdf-canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+                });
+            }, function (reason) {
+                console.error(reason);
+            });
+        }
+
+        // Load the PDF based on URL parameters
+        var pdfPath = getQueryVariable('pdfPath');
+        var pageNumber = parseInt(getQueryVariable('pageNumber'), 10) || 1;  // Default to page 1 if not provided
+
+        document.getElementById('prev-page').addEventListener('click', function() {
+            if (pageNumber > 1) {
+                pageNumber--;
+                window.history.pushState({}, '', '?pdfPath=' + pdfPath + '&pageNumber=' + pageNumber);
+                loadPDF(pdfPath, pageNumber);
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', function() {
+            pageNumber++;
+            window.history.pushState({}, '', '?pdfPath=' + pdfPath + '&pageNumber=' + pageNumber);
+            loadPDF(pdfPath, pageNumber);
+        });
+
+        loadPDF(pdfPath, pageNumber);
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+}
+
+.bottom-right-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: transparent;
+  color: black; /* Blue text color */
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: Arial;
+  font-style: italic;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
+}

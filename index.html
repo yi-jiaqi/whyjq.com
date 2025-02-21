@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Why? This is Jiaqi Yi</title>
+	<link rel="stylesheet" href="styles.css">
+	<link href="pattern.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+	<link rel="icon" type="image/svg+xml" href="icons/whyjq.svg">
+	<script src='https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.js' crossorigin='anonymous'></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+	<script src="scripts.js"></script>
+	<script src="basicFunctions.js"></script>
+	<script src="IntegratedFunctions.js"></script>
+	<script src="objects.js"></script>
+
+	<script>
+		// document.addEventListener('DOMContentLoaded', setupGrid)
+		// window.addEventListener('resize', setupOrUpdate)
+		window.onload = function () {
+			const params = new URLSearchParams(window.location.search);
+			const type = params.get('code');
+			if (type) {
+				setupGrid(null, parseInt(type));
+			} else {
+				setupGrid(null, -1);  // default setup if no code is specified
+			}
+		};
+
+		function updateURL(type) {
+			const newUrl = new URL(window.location);
+			if (type === -1) {
+				// If the type is -1, perhaps remove the query parameter
+				newUrl.searchParams.delete('code');
+			} else {
+				// Set 'code' as the query parameter
+				newUrl.searchParams.set('code', type);
+			}
+			history.pushState({ type }, '', newUrl);
+		}
+
+
+		window.onpopstate = function (event) {
+			if (event.state && event.state.type) {
+				setupGrid(null, event.state.type);
+			} else {
+				setupGrid(null, -1);
+			}
+		};
+
+		window.addEventListener('resize', function () {
+			console.log('Window resized.');
+			setupGrid(null, currentType)
+		});
+
+
+		// Start the auto-hover when the page loads
+		document.addEventListener('DOMContentLoaded', () => {
+			setTimeout(startAutoHover, 1000); // Start after 1 second delay
+		});
+
+		// document.addEventListener('DOMContentLoaded', function () {
+		// 	const url = new URL(window.location);
+		// 	if (url.search !== '') {
+		// 		url.search = ''; // Clear all query parameters
+		// 		window.history.replaceState({ path: url.toString() }, '', url.toString());
+		// 		window.location.href = url.toString(); // Redirect to the clean URL
+		// 	} else {
+		// 		// Initialize your app as normal
+		// 		setupGrid(null, -1);
+		// 	}
+		// });
+
+		// function getTypeFromUrl() {
+		// 	const params = new URLSearchParams(window.location.search);
+		// 	const type = params.get('code'); // Fetch the 'code' parameter
+		// 	return type; // This will be a string if 'code' exists, or null if it does not
+		// }
+
+
+	</script>
+</head>
+
+<body>
+
+	<canvas id="canvas"></canvas>
+	<div class="pattern-dots-sm gray-lighter full-screen">
+		<div class="grid-container">
+		</div>
+	</div>
+
+
+	<div id="pdf-modal-background" onclick="closePDFModal(event)">
+		<div id="pdf-modal" onclick="event.stopPropagation()">
+			<canvas id="pdf-canvas"></canvas>
+			<div id="prev-page" class="page-control" onclick="prevPage()">Prev</div>
+			<div id="next-page" class="page-control" onclick="nextPage()">Next</div>
+			<div id="page-indicator" class="page-control"></div>
+			<input type="range" id="page-slider" min="1" max="1" value="1">
+			<div class="tick-container" id="tick-container"></div>
+		</div>
+	</div>
+
+	<script src="cloud.js"></script>
+	<script src="pdfViewer.js"></script>
+</body>
+
+</html>
