@@ -314,14 +314,14 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 	const topLeftGridItem = findGridItemByCoordsFromGC(gridContainer, topLeftCoords.x, topLeftCoords.y)
 	// console.log("cellSize:", cellSize)
 	// console.log("gapSize:", gapSize)
-	const coverWidth = (layoutDimension.x * cellSize + (layoutDimension.x - 1) * gapSize * 2.01)
-	const coverHeight = (layoutDimension.y * cellSize + (layoutDimension.y - 1) * gapSize * 2.01)
+	const coverWidth = (layoutDimension.x * cellSize + (layoutDimension.x - 1) * gapSize * 2)
+	const coverHeight = (layoutDimension.y * cellSize + (layoutDimension.y - 1) * gapSize * 2)
 	fullImageOverlay.className = 'grid-item-full-image';
 	fullImageOverlay.style.position = 'absolute';
 	fullImageOverlay.style.width = `${coverWidth}px`;
 	fullImageOverlay.style.height = `${coverHeight}px`;
-	fullImageOverlay.style.top = `${topLeftGridItem.offsetTop + gapSize * 0.65}px`;
-	fullImageOverlay.style.left = `${topLeftGridItem.offsetLeft + gapSize * 0.63}px`;
+	fullImageOverlay.style.top = `${topLeftGridItem.offsetTop + gapSize * 0.25}px`;
+	fullImageOverlay.style.left = `${topLeftGridItem.offsetLeft + gapSize * 0.25}px`;
 	fullImageOverlay.style.display = 'none'; // Initially hidden
 	gridContainer.appendChild(fullImageOverlay);
 
