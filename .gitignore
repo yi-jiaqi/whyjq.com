@@ -1,2 +1,3 @@
 arrival/.env
 arrival/.env
+arrival/.serverless/cloudformation-template-update-stack.json
