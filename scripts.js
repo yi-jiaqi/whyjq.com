@@ -19,59 +19,59 @@ let autoHoverInterval;
 let userHasInteracted = false;
 
 function startAutoHover() {
-    // Get all elements that have hover effects
-    const elementsWithHover = Array.from(document.styleSheets)
-        .flatMap(sheet => {
-            try {
-                return Array.from(sheet.cssRules);
-            } catch {
-                return [];
-            }
-        })
-        .filter(rule => rule.selectorText?.includes(':hover'))
-        .map(rule => rule.selectorText.split(':hover')[0])
-        .flatMap(selector => Array.from(document.querySelectorAll(selector)));
+  // Get all elements that have hover effects
+  const elementsWithHover = Array.from(document.styleSheets)
+    .flatMap(sheet => {
+      try {
+        return Array.from(sheet.cssRules);
+      } catch {
+        return [];
+      }
+    })
+    .filter(rule => rule.selectorText?.includes(':hover'))
+    .map(rule => rule.selectorText.split(':hover')[0])
+    .flatMap(selector => Array.from(document.querySelectorAll(selector)));
 
-    let currentIndex = 0;
-    
-    // Stop auto-hover if user interacts with any element
-    document.addEventListener('mouseover', () => {
-        userHasInteracted = true;
-        if (autoHoverInterval) {
-            clearInterval(autoHoverInterval);
-            autoHoverInterval = null;
+  let currentIndex = 0;
+
+  // Stop auto-hover if user interacts with any element
+  document.addEventListener('mouseover', () => {
+    userHasInteracted = true;
+    if (autoHoverInterval) {
+      clearInterval(autoHoverInterval);
+      autoHoverInterval = null;
+    }
+  }, { once: true });
+
+  // Start the interval
+  autoHoverInterval = setInterval(() => {
+    if (userHasInteracted) {
+      clearInterval(autoHoverInterval);
+      return;
+    }
+
+    // Remove hover from previous element
+    if (currentIndex > 0) {
+      const prevElement = elementsWithHover[currentIndex - 1];
+      prevElement?.dispatchEvent(new Event('mouseout'));
+    }
+
+    // Add hover to current element
+    const element = elementsWithHover[currentIndex];
+    if (element) {
+      element.dispatchEvent(new Event('mouseover'));
+
+      // Remove hover effect after 1 second
+      setTimeout(() => {
+        if (!userHasInteracted) {
+          element.dispatchEvent(new Event('mouseout'));
         }
-    }, { once: true });
+      }, 1000);
+    }
 
-    // Start the interval
-    autoHoverInterval = setInterval(() => {
-        if (userHasInteracted) {
-            clearInterval(autoHoverInterval);
-            return;
-        }
-
-        // Remove hover from previous element
-        if (currentIndex > 0) {
-            const prevElement = elementsWithHover[currentIndex - 1];
-            prevElement?.dispatchEvent(new Event('mouseout'));
-        }
-
-        // Add hover to current element
-        const element = elementsWithHover[currentIndex];
-        if (element) {
-            element.dispatchEvent(new Event('mouseover'));
-            
-            // Remove hover effect after 1 second
-            setTimeout(() => {
-                if (!userHasInteracted) {
-                    element.dispatchEvent(new Event('mouseout'));
-                }
-            }, 1000);
-        }
-
-        // Move to next element or reset to beginning
-        currentIndex = (currentIndex + 1) % elementsWithHover.length;
-    }, 2000); // Trigger every 2 seconds
+    // Move to next element or reset to beginning
+    currentIndex = (currentIndex + 1) % elementsWithHover.length;
+  }, 2000); // Trigger every 2 seconds
 }
 
 
@@ -162,7 +162,7 @@ function setupGrid(event, type = -1) {
       gridItem.classList.remove('hidden'); // Remove the 'hidden' class to trigger the appearance transition
     }, 500);
   }
-  console.log(gridContainer)
+  // console.log(gridContainer)
   gridMap = createGridMap(gridContainer, sumX, sumY);
   setTimeout(() => {
     gridMap = createGridMap(gridContainer, sumX, sumY);
@@ -192,8 +192,6 @@ function fillGrid(type) {
     //-----------------------------------------------------DEFAULT-----------------------------------------------------
     // placeSS(gridContainer,buttons[3],[sumX, sumY],surroundingCells);
     placeSS(gridContainer, logo, [1, 1], surroundingCells);
-    // console.log(surroundingCells.slice())
-    // console.log(surroundingCells)
 
     let groupMustSee = filterWithIDs(projectObjects, mustSee);
     let groupNotMust = filterUnqualifiedItems(projectObjects, mustSee, 8);
@@ -251,8 +249,8 @@ function fillGrid(type) {
     );
     checkPreExistingItems(gridContainer, gridMap);
     let objectsByDimension;
-    if (sumX * sumY <= canvasDivision * (canvasDivision + 2)) { objectsByDimension = groupByDimension(selectedProjects, true); } else { objectsByDimension = groupByDimension(selectedProjects);}
-    console.log("obd:", objectsByDimension);
+    if (sumX * sumY <= canvasDivision * (canvasDivision + 2)) { objectsByDimension = groupByDimension(selectedProjects, true); } else { objectsByDimension = groupByDimension(selectedProjects); }
+    // console.log("obd:", objectsByDimension);
     placeMM_Cover(gridContainer, gridMap, objectsByDimension);
     checkPreExistingItems(gridContainer, gridMap);
 
@@ -330,7 +328,35 @@ function fillGrid(type) {
     } //1-2 place the previous and next
     //1-3 place images & dimensions + introductions (as 1 grid)
     checkPreExistingItems(gridContainer, gridMap);
-    placeMM_Content(gridContainer, gridMap, project.elements,project.pdf)
-
+    placeMM_Content(gridContainer, gridMap, project.elements, project.pdf)
   }
+
+  setupCaptionContainer();
+}
+
+
+function setupCaptionContainer() {
+    // Instead of setting up new caption management, just initialize the captionManager
+    const captionContainer = document.getElementById('caption-container');
+    if (!captionContainer) {
+        console.error('Caption container not found in DOM');
+        return;
+    }
+
+    // Initialize the global captionManager
+    window.captionManager = createCaptionManager();
+
+    // No need to clone or replace grid container
+    const gridContainer = document.querySelector('.grid-container');
+    
+    // Set up delegate event listener for grid items
+    gridContainer.addEventListener('mouseenter', (event) => {
+        const gridItem = event.target.closest('.grid-item');
+        if (gridItem) {
+            const title = gridItem.querySelector('.grid-item-title');
+            if (title && title.textContent) {
+                window.captionManager.updateCaption(title.textContent);
+            }
+        }
+    }, true);
 }

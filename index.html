@@ -47,8 +47,10 @@
 		window.onpopstate = function (event) {
 			if (event.state && event.state.type) {
 				setupGrid(null, event.state.type);
+
 			} else {
 				setupGrid(null, -1);
+
 			}
 		};
 
@@ -56,30 +58,6 @@
 			console.log('Window resized.');
 			setupGrid(null, currentType)
 		});
-
-
-		// Start the auto-hover when the page loads
-		document.addEventListener('DOMContentLoaded', () => {
-			setTimeout(startAutoHover, 1000); // Start after 1 second delay
-		});
-
-		// document.addEventListener('DOMContentLoaded', function () {
-		// 	const url = new URL(window.location);
-		// 	if (url.search !== '') {
-		// 		url.search = ''; // Clear all query parameters
-		// 		window.history.replaceState({ path: url.toString() }, '', url.toString());
-		// 		window.location.href = url.toString(); // Redirect to the clean URL
-		// 	} else {
-		// 		// Initialize your app as normal
-		// 		setupGrid(null, -1);
-		// 	}
-		// });
-
-		// function getTypeFromUrl() {
-		// 	const params = new URLSearchParams(window.location.search);
-		// 	const type = params.get('code'); // Fetch the 'code' parameter
-		// 	return type; // This will be a string if 'code' exists, or null if it does not
-		// }
 
 
 	</script>
@@ -104,6 +82,7 @@
 			<div class="tick-container" id="tick-container"></div>
 		</div>
 	</div>
+	<div id="caption-container"></div>
 
 	<script src="cloud.js"></script>
 	<script src="pdfViewer.js"></script>

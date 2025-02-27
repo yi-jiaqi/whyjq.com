@@ -302,9 +302,6 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 	in placeMM_Content, projectId is null;
 	*/
 
-
-	console.log("placeImageInLayout");
-	console.log("pdfPath:", pdfPath);
 	const cellSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--grid-size'));
 	const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--grid-gap'));
 
@@ -312,8 +309,7 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 	const fullImageOverlay = document.createElement('img');
 	fullImageOverlay.src = imageUrl;
 	const topLeftGridItem = findGridItemByCoordsFromGC(gridContainer, topLeftCoords.x, topLeftCoords.y)
-	// console.log("cellSize:", cellSize)
-	// console.log("gapSize:", gapSize)
+
 	const coverWidth = (layoutDimension.x * cellSize + (layoutDimension.x - 1) * gapSize * 2)
 	const coverHeight = (layoutDimension.y * cellSize + (layoutDimension.y - 1) * gapSize * 2)
 	fullImageOverlay.className = 'grid-item-full-image';
@@ -381,7 +377,7 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 					this.alt = '...';
 				};
 
-				if (projectId) {//The case of cover, click goes to the project
+				if (projectId) {
 					let action = () => {
 						setupGrid(null, projectId);
 						fullImageOverlay.style.display = 'none';
@@ -399,8 +395,8 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 				gridItem.appendChild(invisibleElement);
 
 
-				if (isMobileDevice()){
-					if (projectId) {//The case of cover, click goes to the project
+				if (isMobileDevice()) {
+					if (projectId) {
 						let action = () => {
 							setupGrid(null, projectId);
 							fullImageOverlay.style.display = 'none';
@@ -412,9 +408,13 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 					// Mouse events to toggle full image overlay
 					invisibleElement.addEventListener('mouseover', () => {
 						fullImageOverlay.style.display = 'block';
+						console.log("mouseover: full-image," + title);
+						if (window.captionManager) {
+							window.captionManager.updateCaption(title);
+						}
 					});
 				}
- 
+
 
 
 				// Add clickable functionality if projectId is present
@@ -431,6 +431,100 @@ function placeImageInLayout(gridContainer, topLeftCoords, layoutDimension, image
 		}
 	}
 }
+
+
+function createCaptionManager() {
+	const captionContainer = document.getElementById('caption-container');
+	let currentAnimation = null;
+	let currentText = '';
+	let deleteTimeout = null;
+	let stayTimeout = null;
+	const CAPTION_DURATION = 5000;
+	const STATE = {
+		IDLE: 'idle',
+		TYPING: 'typing',
+		STAYING: 'staying',
+		DELETING: 'deleting'
+	};
+	let currentState = STATE.IDLE;
+
+	function updateCaption(newText) {
+		if (!captionContainer) return;
+		// console.log(`Caption update requested: "${newText}" (Current state: ${currentState})`);
+
+		// If same text and in STAYING state, just reset the timer
+		if (newText === currentText && currentState === STATE.STAYING) {
+			// console.log('Same text, refreshing stay duration');
+			clearTimeout(deleteTimeout);
+			clearTimeout(stayTimeout);
+			stayTimeout = setTimeout(startDeleteAnimation, CAPTION_DURATION);
+			return;
+		}
+
+		// Cancel any ongoing animations/timeouts
+		if (currentAnimation) currentAnimation.cancel();
+		clearTimeout(deleteTimeout);
+		clearTimeout(stayTimeout);
+
+		currentText = newText;
+		const textLength = newText.length;
+		const typingDuration = Math.min(0.05 * textLength, 2);
+
+		// Start typing animation
+		currentState = STATE.TYPING;
+		captionContainer.textContent = newText;
+		captionContainer.style.width = '0';
+		captionContainer.classList.add('visible');
+
+		// console.log(`Starting typing animation (${typingDuration}s)`);
+		currentAnimation = captionContainer.animate([
+			{ width: '0', opacity: 1 },
+			{ width: '300px', opacity: 1 }
+		], {
+			duration: typingDuration * 1000,
+			easing: `steps(${textLength})`,
+			fill: 'forwards'
+		});
+
+		// After typing, enter staying state
+		currentAnimation.onfinish = () => {
+			currentState = STATE.STAYING;
+			// console.log('Typing finished, entering stay duration');
+			stayTimeout = setTimeout(startDeleteAnimation, CAPTION_DURATION);
+		};
+	}
+
+	function startDeleteAnimation() {
+		if (currentState === STATE.DELETING) return;
+
+		currentState = STATE.DELETING;
+		// console.log('Starting delete animation');
+
+		const textLength = captionContainer.textContent.length;
+		currentAnimation = captionContainer.animate([
+			{ width: '300px', opacity: 1 },
+			{ width: '0', opacity: 1 }
+		], {
+			duration: Math.min(0.05 * textLength, 2) * 1000,
+			easing: `steps(${textLength})`,
+			fill: 'forwards'
+		});
+
+		currentAnimation.onfinish = () => {
+			captionContainer.textContent = '';
+			captionContainer.classList.remove('visible');
+			currentText = '';
+			currentState = STATE.IDLE;
+			// console.log('Delete animation finished, returning to idle state');
+		};
+	}
+
+	return { updateCaption };
+}
+
+// Initialize the caption manager at the start
+const captionManager = createCaptionManager();
+
 
 
 /*----------------------------------------------------O/P----------------------------------------------------*/
@@ -498,7 +592,7 @@ function visualizeGridMapForTesting(gridMap) {
 	}
 
 	// Output the final grid visualization to the console
-	console.log(gridVisualization);
+	// console.log(gridVisualization);
 }
 
 

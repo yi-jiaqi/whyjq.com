@@ -1,4 +1,4 @@
-const mustSee = [4001, 4002, 8001,8002, 9001, 1008]
+const mustSee = [4002, 8001,8002, 9001, 1008]
 
 
 const buttons = [
