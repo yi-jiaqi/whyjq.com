@@ -193,9 +193,8 @@ function fillGrid(type) {
     // placeSS(gridContainer,buttons[3],[sumX, sumY],surroundingCells);
     placeSS(gridContainer, logo, [1, 1], surroundingCells);
 
-    let groupMustSee = filterWithIDs(projectObjects, mustSee);
-    let groupNotMust = filterUnqualifiedItems(projectObjects, mustSee, 8);
-    let selectedProjects = groupMustSee.concat(groupNotMust)
+    // 从排除列表之外的项目中随机选8个显示在主页
+    let selectedProjects = filterUnqualifiedItems(projectObjects, excludeFromHome, 8)
     let objectsByDimension = groupByDimension(selectedProjects);
 
     let checkedCategoryObjects = [];

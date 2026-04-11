@@ -1,4 +1,5 @@
-const mustSee = [4002, 8001,8002, 9001, 1008]
+// 首页不显示的项目列表
+const excludeFromHome = [8002, 8003]  // Quanta Bridge, Alfa Art Gallery
 
 
 const buttons = [
@@ -219,7 +220,7 @@ const projectObjects = [
   {
     coverPicture: "images/pukouRailwayStation.png",
     dimension: { x: 2, y: 1 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: 'pdfs/pukou_railway_station_reform.pdf',
     year: 2021,
 
@@ -281,7 +282,7 @@ const projectObjects = [
     coverPicture: "images/mochiGallery.jpeg",
     dimension: { x: 2, y: 1 },
 
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: 'pdfs/mochi_gallery.pdf',
     year: 2022,
     title: `Wang Xizhi Memorial Gallery`,
@@ -303,7 +304,7 @@ const projectObjects = [
   {
     coverPicture: "images/youthActivityCenter.png",
     dimension: { x: 2, y: 1 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: 'pdfs/youth_activities_center.pdf',
     year: 2021,
     title: `Youth Activity Center`,
@@ -348,7 +349,7 @@ const projectObjects = [
     coverPicture: "images/hexagonCommunity.png",
     dimension: { x: 2, y: 1 },
 
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     year: 2020,
     pdf: 'pdfs/hexagon_community.pdf',
     title: `Hexagon Community`,
@@ -467,7 +468,7 @@ const projectObjects = [
   {
     coverPicture: "images/choiceReverse.png",
     dimension: { x: 2, y: 1 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: 'pdfs/choice_reverse.pdf',
     year: 2022,
     title: `Choice Reverse`,
@@ -494,7 +495,7 @@ const projectObjects = [
   {
     coverPicture: "images/cemetery.png",
     dimension: { x: 2, y: 1 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: '',
     year: 2024,
 
@@ -523,7 +524,7 @@ const projectObjects = [
     tags: ["generativeArt", "interactionDesign"],
     id: 4001,
     elements: [
-      { kind: 'link', link: 'https://whyjq.com/arrival/', explanation: "I am here." },
+      { kind: 'link', link: 'https://yi-jiaqi.github.io/arrival/', explanation: "I am here." },
       { kind: 'text', content: " ", },
       { kind: 'text', content: "This is my final project for 2023 ITP Winter Show, a generative artwork, a recreation of movie \"Arrival\".", },
       { kind: 'text', content: "Here users can talk to the alien behind the screen like what they do in the movie.", },
@@ -554,7 +555,7 @@ const projectObjects = [
     id: 4002,
     elements: [
       // { kind: 'link', content: "icons/github.svg", link: 'https://github.com/Typemaster32/Mandala', explanation: "Source Code" },
-      { kind: 'link', link: 'https://typemaster32.github.io/Mandala/', explanation: "Let me blossom!" },
+      { kind: 'link', link: 'https://yi-jiaqi.github.io/mandala/', explanation: "Let me blossom!" },
       { kind: 'text', content: " ", },
       { kind: 'text', content: "This is my 2024 ITP Spring Show project <b>\"Mandala\"</b>, collabrating with <b>Tammana Jain.</b>", },
 
@@ -582,7 +583,7 @@ const projectObjects = [
     coverPicture: "images/disordered1.png",
     dimension: { x: 2, y: 1 },
 
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: '',
     year: 2019,
     title: `Disordered`,
@@ -608,7 +609,7 @@ const projectObjects = [
     tags: ["generativeArt",],
     id: 4004,
     elements: [
-      { kind: 'link', content: "icons/arrow3.svg", link: 'https://typemaster32.github.io/Voronoi-Map-Creation/', explanation: "Try it!" },
+      { kind: 'link', content: "icons/arrow3.svg", link: 'https://yi-jiaqi.github.io/Voronoi-Map-Creation/', explanation: "Try it!" },
       { kind: 'text', content: "This is a map creater using <b>voronoi diagram.</b>", },
       { kind: 'text', content: "It creates a different map everytime generating, making of Ocean -> Sea -> Beach -> Forest -> Deep Forest -> Bare Mountain -> Snow Mountain Top", },
       { kind: 'picture', content: "images/voronoi5.png", dimension: { x: 4, y: 3 } },
@@ -707,7 +708,7 @@ const projectObjects = [
   {
     coverPicture: "images/ft.jpeg",
     dimension: { x: 4, y: 2 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: '',
     year: 2024,
     title: `Financial Times: A Redesign`,
@@ -842,7 +843,7 @@ const projectObjects = [
   {
     coverPicture: "images/theMinute.png",
     dimension: { x: 2, y: 1 },
-    dimension_category: { x: 4, y: 2 },
+    dimension_category: { x: 2, y: 1 },
     pdf: 'pdfs/the_minute.pdf',
     year: 2022,
     title: `The Minute`,
